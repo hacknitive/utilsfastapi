@@ -1,4 +1,9 @@
 from typing import Optional
+from sys import (
+    stderr,
+    stdout,
+)
+
 from os import (
     makedirs,
     sep,
@@ -15,22 +20,27 @@ from logging.handlers import (
     TimedRotatingFileHandler,
 )
 
-from .enums import EnumLogLevel, EnumLogHandler
+from .enums import EnumLogLevel, EnumLogHandler, EnumLogStream
+
+
+STREAM_DICT = {
+    EnumLogStream.STDOUT: stdout,
+    EnumLogStream.STDERR: stderr,
+}
 
 
 class PrepareLogger:
     def __init__(
-            self,
-            project_base_dir: str,
-            name: str,
-            level: EnumLogLevel,
-            handlers: list[EnumLogHandler],
-            format_: str = '{"time":"%(asctime)s", "name": "%(name)s", "level": "%(levelname)s", '
-                           '"function": "%(funcName)s", "message": "%(message)s"}',
-
-            timed_rotating_file_handler: Optional[dict] = None,
-            syslog_handler: Optional[dict] = None,
-            stream_handler: Optional[dict] = None,
+        self,
+        project_base_dir: str,
+        name: str,
+        level: EnumLogLevel,
+        handlers: list[EnumLogHandler],
+        format_: str = '{"time":"%(asctime)s", "name": "%(name)s", "level": "%(levelname)s", '
+        '"function": "%(funcName)s", "message": "%(message)s"}',
+        timed_rotating_file_handler: Optional[dict] = None,
+        syslog_handler: Optional[dict] = None,
+        stream_handler: Optional[dict] = None,
     ) -> None:
         self.project_base_dir = project_base_dir
         self.name = name
@@ -72,14 +82,22 @@ class PrepareLogger:
             self._prepare_console_handler()
 
     def _prepare_file_handler(self):
-        self.file_path = self.project_base_dir + sep + "logs" + sep + self.timed_rotating_file_handler["filename"]
+        self.file_path = (
+            self.project_base_dir
+            + sep
+            + "logs"
+            + sep
+            + self.timed_rotating_file_handler["filename"]
+        )
 
         self._create_parent_folders()
 
-        handler = TimedRotatingFileHandler(**{
-            **self.timed_rotating_file_handler,
-            'filename': self.file_path,
-        })
+        handler = TimedRotatingFileHandler(
+            **{
+                **self.timed_rotating_file_handler,
+                "filename": self.file_path,
+            }
+        )
         self.prepared_handlers.append(handler)
 
     def _create_parent_folders(self):
@@ -95,7 +113,8 @@ class PrepareLogger:
         self.prepared_handlers.append(handler)
 
     def _prepare_console_handler(self):
-        handler = StreamHandler(**self.stream_handler_input)
+        stream = STREAM_DICT[self.stream_handler_input.get("stream", EnumLogStream.STDOUT)]
+        handler = StreamHandler(stream=stream)
         self.prepared_handlers.append(handler)
 
     def _set_formatter(self):
