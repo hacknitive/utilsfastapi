@@ -4,13 +4,11 @@ from logging import Logger
 from fastapi import (
     Request,
     FastAPI,
-    Response,
 )
-from orjson import dumps
 from utilsfastapi.settings import EnumRunMode
 
+from ..router import ProjectOrjsonResponse as Response
 from .project_base_exception import ProjectBaseException
-
 from .create_traceback import create_traceback
 
 
@@ -24,7 +22,7 @@ def prepare_handler_for_project_base_exception_function(
             exc: ProjectBaseException
     ) -> Response:
         status_code = getattr(exc,"status_code", 500)
-        success = getattr(exc,"success", None)
+        success = getattr(exc,"success", False)
         data = getattr(exc,"data", None)
         error = getattr(exc,"error", None)
         
@@ -53,15 +51,9 @@ def prepare_handler_for_project_base_exception_function(
 
         return Response(
                     status_code=status_code,
-                    content=dumps(
-                        {
-                            "status_code": status_code,
-                            "success": success,
-                            "data": data,
-                            "error": error,
-                        }
-                    ),
-                    media_type="application/json",
+                    success=success,
+                    data= data,
+                    error= error,
                 )
 
 

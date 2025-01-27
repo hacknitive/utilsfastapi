@@ -5,10 +5,8 @@ from fastapi import (
     Request,
     status,
     FastAPI,
-    Response,
 )
-from orjson import dumps
-
+from ..router import ProjectOrjsonResponse as Response
 from utilsfastapi.settings import EnumRunMode
 from .create_traceback import create_traceback
 
@@ -39,15 +37,9 @@ def prepare_handler_for_5xx_creator_function(
 
                 return Response(
                     status_code=error,
-                    content=dumps(
-                        {
-                            "status_code": error,
-                            "success": False,
-                            "data": None,
-                            "error": error_text,
-                        }
-                    ),
-                    media_type="application/json",
+                    success= False,
+                    data= None,
+                    error= error_text,
                 )
 
         else:
@@ -70,15 +62,9 @@ def prepare_handler_for_5xx_creator_function(
 
                 return Response(
                     status_code=error,
-                    content=dumps(
-                        {
-                            "status_code": error,
-                            "success": False,
-                            "data": None,
-                            "error": traceback_,
-                        }
-                    ),
-                    media_type="application/json",
+                    success= False,
+                    data= None,
+                    error= traceback_,
                 )
 
         return handler_for_internal_server_error

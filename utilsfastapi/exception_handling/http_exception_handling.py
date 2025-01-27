@@ -4,14 +4,13 @@ from traceback import format_exc
 from fastapi import (
     Request,
     FastAPI,
-    Response,
 )
-from orjson import dumps
 
 from fastapi.exceptions import HTTPException
 from starlette.exceptions import HTTPException as Starlette_exc
 
 
+from ..router import ProjectOrjsonResponse as Response
 from .create_traceback import create_traceback
 
 
@@ -32,15 +31,9 @@ def prepare_handler_for_http_exception_function(
 
         return Response(
             status_code=exc.status_code,
-            content=dumps(
-                {
-                    "status_code": exc.status_code,
-                    "success": False,
-                    "data": None,
-                    "error": exc.detail,
-                }
-            ),
-            media_type="application/json",
+            success= False,
+            data= None,
+            error= exc.detail,
         )
 
     fast_api_app.exception_handler(HTTPException)(handler_for_http_exception)
