@@ -22,7 +22,7 @@ INSTALL_REQUIRES = parse_requirements('requirements.txt')
 setup(
     name="utilsfastapi",
     version="v0.0.1",
-    packages=find_packages(),
+    packages=find_packages(include=['utilsfastapi', 'utilsfastapi.*']),
     install_requires=INSTALL_REQUIRES,
     author="Reza 'Sam' Aghamohammadi (Hacknitive)",
     author_email="hacknitive@gmail.com",
