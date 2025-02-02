@@ -6,7 +6,6 @@ from pydantic import BaseModel
 class ResponseSchema(BaseModel):
     status_code: int = 200
     success: bool = True
-    message: str
     error: Optional[str] = None
     # data: Optional[]  # Should be overridden
 

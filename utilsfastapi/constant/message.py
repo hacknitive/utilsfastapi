@@ -1,0 +1,5 @@
+MESSAGE_SUCCESS = "The operation is done successfully."
+MESSAGE_FAILURE = "The operation failed."
+MESSAGE_SERVER_ERROR =  "A server error occurred! Keep calm! It is reported to admin automatically!"
+MESSAGE_UNAUTHENTICATED_USER = "User is not authenticated!"
+MESSAGE_UNAUTHORIZED_USER = "User do not has authorization!"
