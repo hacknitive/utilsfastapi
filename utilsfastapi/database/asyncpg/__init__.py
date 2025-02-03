@@ -4,3 +4,7 @@ from .get_postgresql_connection_pool import get_postgresql_connection_pool
 from .get_postgresql_connection import get_postgresql_connection
 from .initialize_db import initialize_db
 from .db_action import DbAction
+from .setup_database import setup_database
+from .get_all_columns_names import get_all_columns_names
+from .get_all_columns_names_sync import get_all_columns_names_sync
+from .get_columns_by_type_sync import get_columns_by_type_sync
